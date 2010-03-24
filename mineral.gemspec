@@ -16,8 +16,17 @@ Gem::Specification.new do |s|
     "README.markdown"
   ]
   s.files = [
-    "README.markdown",
-     "VERSION"
+    ".gitignore",
+     "MIT-LICENSE",
+     "README.markdown",
+     "Rakefile",
+     "VERSION",
+     "lib/mineral.rb",
+     "lib/mineral/response.rb",
+     "mineral.gemspec",
+     "test/app/mineral/handler.rb",
+     "test/helper.rb",
+     "test/test_mineral.rb"
   ]
   s.homepage = %q{http://github.com/jonbell/mineral}
   s.rdoc_options = ["--charset=UTF-8"]
