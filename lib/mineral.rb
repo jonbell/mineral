@@ -25,7 +25,7 @@ module Mineral
 
         load_list.map do |requested_mineral|
           if mineral = all_minerals[requested_mineral]
-            require_dependency 'app/mineral/' + mineral
+            require_dependency "#{Rails.root}/app/mineral/" + mineral
             requested_mineral.constantize
           end
         end.compact

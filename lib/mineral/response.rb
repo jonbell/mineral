@@ -16,7 +16,7 @@ module Mineral
           @headers = args[1]
           @body = args[2]
         end
-        @body = [@body] unless @body.is_a? Array
+        @body = [@body] unless @body.is_a? Array || @body.is_a?(Mongo::GridIO)
       end
     end
     
