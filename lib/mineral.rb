@@ -43,15 +43,40 @@ module Mineral
           if app.methods.include?(request.request_method) && matcher = app.regex.match(request.path_info)
             args = []
             1.step(matcher.size - 1){|group| args << matcher[group]}
-            result = app.send(request.request_method.downcase, request, *args)
-            if result.is_a?(Array)
-              return result
-            elsif result.is_a?(::Mineral::Response)
-              return result.to_rack
-            end
+
+            return call_mineral_endpoint(app, request.request_method.downcase, request, *args)
           end
         end
         @app.call(env)
+      end
+
+      def call_mineral_endpoint(app, method, request, *args)
+        result = app.send(request.request_method.downcase, request, *args)
+
+        if result.is_a?(Array)
+          return result
+        elsif result.is_a?(::Mineral::Response)
+          return result.to_rack
+        end
+      end
+    end
+
+    begin
+      require 'new_relic/agent/instrumentation/controller_instrumentation.rb'
+    rescue LoadError
+      nil
+    end
+    if defined?(NewRelic)
+      class Mineral
+        include ::NewRelic::Agent::Instrumentation::ControllerInstrumentation
+
+        def call_mineral_endpoint_with_newrelic(app, method, request, *args)
+          perform_action_with_newrelic_trace(:category => :rack, :name => "#{app}.#{method}", :request => request) do
+            call_mineral_endpoint_without_newrelic(app, method, request, *args)
+          end
+        end
+
+        alias_method_chain :call_mineral_endpoint, :newrelic
       end
     end
   end
