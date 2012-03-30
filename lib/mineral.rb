@@ -1,4 +1,5 @@
 require 'active_support/ordered_hash'
+require 'mineral/railtie'
 require 'mineral/response'
 
 module Mineral
@@ -6,10 +7,12 @@ module Mineral
     class Mineral
 
       cattr_accessor :mineral_paths
-      self.mineral_paths = ["#{::Rails.root}/app/mineral"]
+      self.mineral_paths = []
       cattr_accessor :requested_minerals
 
       def self.minerals
+        mineral_paths << "#{::Rails.root}/app/mineral"
+        mineral_paths.uniq!
         matcher = /#{Regexp.escape('/app/mineral/')}(.*)\.rb\Z/
         mineral_glob = mineral_paths.map{ |base| "#{base}/**/*.rb" }
         all_minerals = {}
