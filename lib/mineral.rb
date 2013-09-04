@@ -1,4 +1,5 @@
 require 'active_support/ordered_hash'
+require 'active_support/notifications'
 require 'mineral/railtie'
 require 'mineral/response'
 
@@ -41,13 +42,17 @@ module Mineral
       end
 
       def call(env)
+        call_start = Time.now
         request = ::Rack::Request.new(env)
         @minerals.each do |app|
           if app.methods.include?(request.request_method) && matcher = app.regex.match(request.path_info)
             args = []
             1.step(matcher.size - 1){|group| args << matcher[group]}
+            method = request.request_method.downcase
 
-            return call_mineral_endpoint(app, request.request_method.downcase, request, *args)
+            ActiveSupport::Notifications.instrument('call.mineral', {mineral: app, method: method, call_start: call_start}) do
+              return call_mineral_endpoint(app, method, request, *args)
+            end
           end
         end
         @app.call(env)
