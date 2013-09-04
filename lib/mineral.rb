@@ -2,6 +2,7 @@ require 'active_support/ordered_hash'
 require 'active_support/notifications'
 require 'mineral/railtie'
 require 'mineral/response'
+require 'rails'
 
 module Mineral
   module Rack
@@ -29,7 +30,7 @@ module Mineral
 
         load_list.map do |requested_mineral|
           if mineral = all_minerals[requested_mineral]
-            require_dependency "#{Rails.root}/app/mineral/" + mineral
+            require "#{Rails.root}/app/mineral/" + mineral
             requested_mineral.constantize
           end
         end.compact

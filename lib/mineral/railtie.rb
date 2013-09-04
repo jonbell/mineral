@@ -1,4 +1,5 @@
 require 'mineral'
+require 'rails/railtie'
 
 module Mineral
   class Railtie < Rails::Railtie

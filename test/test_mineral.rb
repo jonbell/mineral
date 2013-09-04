@@ -1,6 +1,6 @@
 require 'helper'
 
-class TestMineral < ActiveSupport::TestCase
+class TestMineral < Test::Unit::TestCase
   context "on GET to /handler/123" do
     setup do
       @response = Mineral::Rack::Mineral.new(stub).call({"REQUEST_METHOD" => "GET", "PATH_INFO" => "/handler/123"})
