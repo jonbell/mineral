@@ -1,8 +1,8 @@
 require 'active_support/ordered_hash'
 require 'active_support/notifications'
+require 'rails'
 require 'mineral/railtie'
 require 'mineral/response'
-require 'rails'
 
 module Mineral
   module Rack

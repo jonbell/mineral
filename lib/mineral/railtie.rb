@@ -1,4 +1,3 @@
-require 'mineral'
 require 'rails/railtie'
 
 module Mineral
